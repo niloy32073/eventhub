@@ -10,8 +10,5 @@ fun main() {
 }
 
 fun Application.module() {
-    configureSerialization()
-    configureDatabases()
-    configureSecurity()
-    configureRouting()
+
 }
