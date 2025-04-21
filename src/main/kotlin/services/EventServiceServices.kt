@@ -57,7 +57,7 @@ class EventServiceServices (private val eventRepository: EventRepositoryInterfac
         serviceRepository.rateService(serviceRatingInfo)
     }
 
-    suspend fun getServicesByRatingId(serviceId:Long):List<ServiceRatingInfo>{
+    suspend fun getServiceRatingsById(serviceId:Long):List<ServiceRatingInfo>{
         return serviceRepository.getServiceRatingById(serviceId)
     }
     suspend fun getServiceByProviderId(serviceProviderId:Long):List<Service>{
