@@ -4,11 +4,11 @@ import com.dbytes.models.common.Event
 import com.dbytes.models.common.Service
 
 interface EventRepositoryInterface {
-    suspend fun createEvent(event: Event):Boolean
+    suspend fun createEvent(event: Event)
     suspend fun updateEvent(event: Event):Boolean
-    suspend fun deleteEvent(event: Event):Boolean
-    suspend fun addServicesToEvent(eventId:Long,serviceId:Long):Boolean
+    suspend fun deleteEvent(eventId: Long):Boolean
+    suspend fun addServicesToEvent(eventId:Long,serviceId:Long)
     suspend fun removeServicesFromEvent(eventId:Long,serviceId:Long):Boolean
-    suspend fun getServicesByEventId(id:Long):List<Service>
     suspend fun getEventsByUserId(id:Long):List<Event>
+    suspend fun getEventCost(eventId:Long):Float
 }

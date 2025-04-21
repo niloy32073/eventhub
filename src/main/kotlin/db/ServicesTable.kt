@@ -8,7 +8,7 @@ object ServicesTable: Table("Services") {
     val id = long("id").autoIncrement()
     val serviceProviderId = reference("serviceProviderId",UserTable.id, ReferenceOption.CASCADE)
     val serviceType = enumerationByName("serviceType", 20, ServiceType::class)
-    val tittle = text("tittle")
+    val title = text("title")
     val description = text("description")
     val imageLink = varchar("imageLink", 255).nullable()
     val fee = float("fee").default(0f)

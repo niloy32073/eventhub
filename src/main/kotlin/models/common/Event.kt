@@ -6,6 +6,5 @@ data class Event(
     val description: String,
     val organizerId:Long,
     val date:Long,
-    val budget:Float,
-    val float:Float
+    val budget:Float
 )

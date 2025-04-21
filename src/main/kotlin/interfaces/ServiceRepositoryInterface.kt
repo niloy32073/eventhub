@@ -2,14 +2,19 @@ package com.dbytes.interfaces
 
 import com.dbytes.enums.BookingStatus
 import com.dbytes.models.common.Service
+import com.dbytes.models.requests.ServiceRatingInfo
+import com.dbytes.models.responses.BookingWithServiceDetails
 
 interface ServiceRepositoryInterface {
-    suspend fun createService(service: Service):Boolean
+    suspend fun createService(service: Service)
     suspend fun updateService(service: Service): Boolean
     suspend fun deleteServiceById(serviceId: Long): Boolean
-    suspend fun rateService(serviceId:Long,userId:Long,rating:Int): Boolean
+    suspend fun rateService(serviceRatingInfo: ServiceRatingInfo)
+    suspend fun getServiceRatingById(serviceId: Long): List<ServiceRatingInfo>
     suspend fun getServices(): List<Service>
-    suspend fun getServiceBookingById(serviceProviderId:Long):List<Service>
-    suspend fun bookService(eventOrganizerId:Long,serviceId:Long):Boolean
-    suspend fun updateBookingStatus(serviceId:Long,status: BookingStatus):Boolean
+    suspend fun getServiceById(serviceProviderId:Long):List<Service>
+    suspend fun bookService(eventOrganizerId:Long,serviceId:Long)
+    suspend fun updateBookingStatus(id:Long,status: BookingStatus):Boolean
+    suspend fun getBookingByEventId(eventId:Long):List<BookingWithServiceDetails>
+    suspend fun getBookingByServiceProviderId(serviceProviderId:Long):List<BookingWithServiceDetails>
 }

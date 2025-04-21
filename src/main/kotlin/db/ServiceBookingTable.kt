@@ -7,7 +7,7 @@ import org.jetbrains.exposed.sql.Table
 
 object ServiceBookingTable: Table("ServiceBookings") {
     val id = long("id").autoIncrement()
-    val servicesId = reference("serviceId",ServicesTable.id, ReferenceOption.CASCADE)
+    val serviceId = reference("serviceId",ServicesTable.id, ReferenceOption.CASCADE)
     val eventOrganizerId = reference("eventOrganizerId",UserTable.id, ReferenceOption.CASCADE)
     val status = enumerationByName("status", 20, BookingStatus::class)
 }
