@@ -2,7 +2,9 @@ package com.dbytes.models.responses
 
 import com.dbytes.enums.BookingStatus
 import com.dbytes.enums.ServiceType
+import kotlinx.serialization.Serializable
 
+@Serializable
 data class BookingWithServiceDetails(
     val id: Long,
     val title: String,

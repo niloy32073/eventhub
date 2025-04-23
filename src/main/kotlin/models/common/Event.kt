@@ -1,5 +1,8 @@
 package com.dbytes.models.common
 
+import kotlinx.serialization.Serializable
+
+@Serializable
 data class Event(
     val id:Long,
     val name: String,

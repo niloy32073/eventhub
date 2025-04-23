@@ -52,11 +52,7 @@ fun Application.module() {
     val authServices = AuthServices(authRepository)
     val userServices = UserServices(userRepository)
     val eventServiceServices = EventServiceServices(eventRepository,serviceRepository)
-    routing {
-        get("/hello"){
-            call.respond("Hello World!")
-        }
-    }
+
     authRoutes(authServices)
     userRoutes(userServices)
     eventServiceRoutes(eventServiceServices)
