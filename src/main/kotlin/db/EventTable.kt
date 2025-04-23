@@ -11,4 +11,5 @@ object EventTable: Table("Events") {
     val date = long("date")
     val organizerId = reference("organizerId",UserTable.id, ReferenceOption.CASCADE)
     val budget = float("budget")
+    override val primaryKey = PrimaryKey(id)
 }

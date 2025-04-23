@@ -8,7 +8,7 @@ import org.jetbrains.exposed.sql.transactions.transaction
 object DBConfig {
     fun connect() {
         Database.connect(
-            url = "jdbc:postgresql://localhost:5432/postgres",
+            url = "jdbc:postgresql://localhost:5432/events",
             driver = "org.postgresql.Driver",
             user = "postgres",
             password = "32o73"

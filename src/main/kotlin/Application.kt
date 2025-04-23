@@ -19,6 +19,8 @@ import io.ktor.server.auth.jwt.*
 import io.ktor.server.engine.*
 import io.ktor.server.netty.*
 import io.ktor.server.plugins.contentnegotiation.*
+import io.ktor.server.response.*
+import io.ktor.server.routing.*
 import org.jetbrains.exposed.sql.DatabaseConfig
 
 fun main() {
@@ -50,7 +52,11 @@ fun Application.module() {
     val authServices = AuthServices(authRepository)
     val userServices = UserServices(userRepository)
     val eventServiceServices = EventServiceServices(eventRepository,serviceRepository)
-
+    routing {
+        get("/hello"){
+            call.respond("Hello World!")
+        }
+    }
     authRoutes(authServices)
     userRoutes(userServices)
     eventServiceRoutes(eventServiceServices)

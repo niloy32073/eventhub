@@ -12,4 +12,6 @@ object ServicesTable: Table("Services") {
     val description = text("description")
     val imageLink = varchar("imageLink", 255).nullable()
     val fee = float("fee").default(0f)
+
+    override val primaryKey = PrimaryKey(id)
 }

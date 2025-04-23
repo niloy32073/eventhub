@@ -10,4 +10,5 @@ object ServiceBookingTable: Table("ServiceBookings") {
     val serviceId = reference("serviceId",ServicesTable.id, ReferenceOption.CASCADE)
     val eventOrganizerId = reference("eventOrganizerId",UserTable.id, ReferenceOption.CASCADE)
     val status = enumerationByName("status", 20, BookingStatus::class)
+    override val primaryKey = PrimaryKey(id)
 }

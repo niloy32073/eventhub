@@ -33,9 +33,7 @@ fun Application.authRoutes(authServices: AuthServices) {
                     authServices.loginUser(request)
                 }
                 val token = JWTConfig.generateToken(user.id.toString())
-                var id = 0L
-                if(user.id != null)
-                    id = user.id
+                val id = user.id
                 val userLogInResult = UserLogInResult(
                     userId = id,
                     roles = user.role.toString(),

@@ -11,4 +11,5 @@ object MessageTable:Table("Messages") {
     val text = varchar("text", 255)
     val ImageLink = varchar("imageLink", 255).nullable()
     val sentAt = long("sentAt")
+    override val primaryKey = PrimaryKey(id)
 }

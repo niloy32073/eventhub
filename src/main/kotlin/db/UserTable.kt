@@ -10,4 +10,5 @@ object UserTable: Table("users") {
     val password = varchar("password", 255)
     val phone = varchar("phone", 15)
     val role = enumerationByName("role",25, Role::class)
+    override val primaryKey = PrimaryKey(id)
 }
