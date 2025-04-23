@@ -9,6 +9,7 @@ object EventTable: Table("Events") {
     val name = varchar("event_name", 255)
     val description = varchar("event_description", 255)
     val date = long("date")
+    val imageLink = varchar("imageLink", 255).nullable()
     val organizerId = reference("organizerId",UserTable.id, ReferenceOption.CASCADE)
     val budget = float("budget")
     override val primaryKey = PrimaryKey(id)
