@@ -2,8 +2,10 @@ package com.dbytes.services
 
 import com.dbytes.enums.BookingStatus
 import com.dbytes.interfaces.EventRepositoryInterface
+import com.dbytes.interfaces.NotificationRepositoryInterface
 import com.dbytes.interfaces.ServiceRepositoryInterface
 import com.dbytes.models.common.Event
+import com.dbytes.models.common.Notification
 import com.dbytes.models.common.Service
 import com.dbytes.models.requests.BookingUpdateInfo
 import com.dbytes.models.requests.ServiceBookingInfo
@@ -11,13 +13,40 @@ import com.dbytes.models.requests.ServiceEventInfo
 import com.dbytes.models.requests.ServiceRatingInfo
 import com.dbytes.models.responses.BookingWithServiceDetails
 
-class EventServiceServices (private val eventRepository: EventRepositoryInterface, private val serviceRepository: ServiceRepositoryInterface) {
+class EventServiceServices (private val eventRepository: EventRepositoryInterface, private val serviceRepository: ServiceRepositoryInterface, private val notificationRepository: NotificationRepositoryInterface) {
     suspend fun createEvent(event: Event){
         eventRepository.createEvent(event)
+        notificationRepository.create(Notification(
+            id = 0L,
+            receiverId = event.organizerId,
+            body = "${event.name} is created",
+            isRead = false,
+            timestamp = event.date,
+        ))
     }
 
     suspend fun updateEvent(event: Event):Boolean{
+        val isUpdated = eventRepository.updateEvent(event)
+        if(isUpdated){
+            notificationRepository.create(Notification(
+                id = 0L,
+                receiverId = event.organizerId,
+                body = "${event.name} is updated",
+                isRead = false,
+                timestamp = event.date,
+            ))
+        }
+        else{
+            notificationRepository.create(Notification(
+                id = 0L,
+                receiverId = event.organizerId,
+                body = "${event.name} is not updated",
+                isRead = false,
+                timestamp = event.date,
+            ))
+        }
         return eventRepository.updateEvent(event)
+
     }
 
     suspend fun deleteEvent(id:Long):Boolean{

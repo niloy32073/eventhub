@@ -21,6 +21,7 @@ class EventRepository: EventRepositoryInterface {
                 it[EventTable.budget] = event.budget
                 it[EventTable.description] = event.description
                 it[EventTable.organizerId] = event.organizerId
+                it[EventTable.imageLink] = event.imageLink
             }
         }
     }
@@ -32,6 +33,7 @@ class EventRepository: EventRepositoryInterface {
             it[EventTable.budget] = event.budget
             it[EventTable.description] = event.description
             it[EventTable.organizerId] = event.organizerId
+            it[EventTable.imageLink] = event.imageLink
         } > 0
     }
 
@@ -62,7 +64,8 @@ class EventRepository: EventRepositoryInterface {
                 date = it[EventTable.date],
                 description = it[EventTable.description],
                 organizerId = it[EventTable.organizerId],
-                budget = it[EventTable.budget]
+                budget = it[EventTable.budget],
+                imageLink = it[EventTable.imageLink],
             )
         }
     }
