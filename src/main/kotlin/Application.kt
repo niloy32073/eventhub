@@ -2,6 +2,7 @@ package com.dbytes
 
 import com.dbytes.repositories.AuthRepository
 import com.dbytes.repositories.EventRepository
+import com.dbytes.repositories.NotificationRepository
 import com.dbytes.repositories.ServiceRepository
 import com.dbytes.repositories.UserRepository
 import com.dbytes.routes.authRoutes
@@ -48,10 +49,11 @@ fun Application.module() {
     val userRepository: UserRepository = UserRepository()
     val eventRepository: EventRepository = EventRepository()
     val serviceRepository: ServiceRepository = ServiceRepository()
+    val notificationRepository: NotificationRepository = NotificationRepository()
 
     val authServices = AuthServices(authRepository)
     val userServices = UserServices(userRepository)
-    val eventServiceServices = EventServiceServices(eventRepository,serviceRepository)
+    val eventServiceServices = EventServiceServices(eventRepository,serviceRepository,notificationRepository)
 
     authRoutes(authServices)
     userRoutes(userServices)
