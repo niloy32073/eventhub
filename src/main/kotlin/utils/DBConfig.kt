@@ -21,6 +21,7 @@ object DBConfig {
             SchemaUtils.create(EventTable)
             SchemaUtils.create(EventServicesTable)
             SchemaUtils.create(MessageTable)
+            SchemaUtils.create(NotificationsTable)
         }
     }
 }
