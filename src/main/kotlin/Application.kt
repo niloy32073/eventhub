@@ -7,9 +7,11 @@ import com.dbytes.repositories.ServiceRepository
 import com.dbytes.repositories.UserRepository
 import com.dbytes.routes.authRoutes
 import com.dbytes.routes.eventServiceRoutes
+import com.dbytes.routes.notificationRoutes
 import com.dbytes.routes.userRoutes
 import com.dbytes.services.AuthServices
 import com.dbytes.services.EventServiceServices
+import com.dbytes.services.NotificationServices
 import com.dbytes.services.UserServices
 import com.dbytes.utils.DBConfig
 import com.dbytes.utils.JWTConfig
@@ -54,8 +56,10 @@ fun Application.module() {
     val authServices = AuthServices(authRepository)
     val userServices = UserServices(userRepository)
     val eventServiceServices = EventServiceServices(eventRepository,serviceRepository,notificationRepository)
+    val notificationServices = NotificationServices(notificationRepository)
 
     authRoutes(authServices)
     userRoutes(userServices)
     eventServiceRoutes(eventServiceServices)
+    notificationRoutes(notificationServices)
 }
