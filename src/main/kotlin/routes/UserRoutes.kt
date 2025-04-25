@@ -14,17 +14,13 @@ fun Application.userRoutes(userServices: UserServices) {
     routing {
         authenticate("auth-jwt") {
             get("/user/{id}") {
-                val userId = call.parameters["id"]?.toLong()
+                val userId = call.parameters["id"]?.toLong() ?: return@get call.respond(HttpStatusCode.BadRequest,"Invalid ID")
                 try {
-                    if (userId != null) {
-                        val user = userServices.getUserById(userId)
-                        if (user != null) {
-                            call.respond(HttpStatusCode.OK, user)
-                        } else {
-                            call.respond(HttpStatusCode.BadRequest, "User not found")
-                        }
+                    val user = userServices.getUserById(userId)
+                    if (user != null) {
+                        call.respond(HttpStatusCode.OK, user)
                     } else {
-                        call.respond(HttpStatusCode.BadRequest, "UserId not found")
+                        call.respond(HttpStatusCode.BadRequest, "User not found")
                     }
                 } catch (e: Exception) {
                     call.respond(HttpStatusCode.BadRequest, "Failed due to ${e.message}")
@@ -46,7 +42,7 @@ fun Application.userRoutes(userServices: UserServices) {
                 }
             }
             delete("/user/{id}") {
-                val userId = call.parameters["id"]?.toLong()
+                val userId = call.parameters["id"]?.toLong() ?: return@delete call.respond(HttpStatusCode.BadRequest,"Invalid ID")
                 try {
                     userServices.deleteUserById(userId!!)
                     call.respond(HttpStatusCode.OK, "User Deleted Successfully")

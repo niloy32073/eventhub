@@ -38,7 +38,7 @@ fun Application.eventServiceRoutes(eventServiceServices: EventServiceServices) {
             delete("/event/{id}") {
                 try {
                     val id =
-                        call.pathParameters["id"]?.toLong() ?: return@delete call.respond(HttpStatusCode.BadRequest)
+                        call.pathParameters["id"]?.toLong() ?: return@delete call.respond(HttpStatusCode.BadRequest,"Invalid ID")
                     eventServiceServices.deleteEvent(id)
                     call.respond(HttpStatusCode.OK, "Event Deleted Successful")
                 } catch (e: Exception) {
@@ -47,7 +47,7 @@ fun Application.eventServiceRoutes(eventServiceServices: EventServiceServices) {
             }
             get("/eventOfUser/{id}") {
                 try {
-                    val id = call.parameters["id"]?.toLong() ?: return@get call.respond(HttpStatusCode.BadRequest)
+                    val id = call.parameters["id"]?.toLong() ?: return@get call.respond(HttpStatusCode.BadRequest,"Invalid ID")
                     val events = eventServiceServices.getEventsByUserId(id)
                     call.respond(HttpStatusCode.OK, events)
                 } catch (e: Exception) {
@@ -56,7 +56,7 @@ fun Application.eventServiceRoutes(eventServiceServices: EventServiceServices) {
             }
             get("/eventCost/{id}") {
                 try {
-                    val id = call.parameters["id"]?.toLong() ?: return@get call.respond(HttpStatusCode.BadRequest)
+                    val id = call.parameters["id"]?.toLong() ?: return@get call.respond(HttpStatusCode.BadRequest,"Invalid ID")
                     val cost = eventServiceServices.getEventCost(id)
                     call.respond(HttpStatusCode.OK, cost)
                 } catch (e: Exception) {
@@ -101,7 +101,7 @@ fun Application.eventServiceRoutes(eventServiceServices: EventServiceServices) {
             }
             delete("/service/{id}") {
                 try {
-                    val id = call.parameters["id"]?.toLong() ?: return@delete call.respond(HttpStatusCode.BadRequest)
+                    val id = call.parameters["id"]?.toLong() ?: return@delete call.respond(HttpStatusCode.BadRequest,"Invalid ID")
                     eventServiceServices.deleteServiceById(id)
                     call.respond(HttpStatusCode.OK, "Service Deleted Successfully")
                 } catch (e: Exception) {
@@ -128,7 +128,7 @@ fun Application.eventServiceRoutes(eventServiceServices: EventServiceServices) {
             get("/ratings/{id}") {
                 try {
                     val serviceId =
-                        call.parameters["id"]?.toLong() ?: return@get call.respond(HttpStatusCode.BadRequest)
+                        call.parameters["id"]?.toLong() ?: return@get call.respond(HttpStatusCode.BadRequest,"Invalid ID")
                     val ratings = eventServiceServices.getServiceRatingsById(serviceId)
                     call.respond(HttpStatusCode.OK, ratings)
                 } catch (e: Exception) {
@@ -138,7 +138,7 @@ fun Application.eventServiceRoutes(eventServiceServices: EventServiceServices) {
             get("/servicesByProvider/{id}") {
                 try {
                     val serviceProviderId =
-                        call.parameters["id"]?.toLong() ?: return@get call.respond(HttpStatusCode.BadRequest)
+                        call.parameters["id"]?.toLong() ?: return@get call.respond(HttpStatusCode.BadRequest,"Invalid ID")
                     val services = eventServiceServices.getServiceByProviderId(serviceProviderId)
                     call.respond(HttpStatusCode.OK, services)
                 } catch (e: Exception) {
@@ -165,7 +165,7 @@ fun Application.eventServiceRoutes(eventServiceServices: EventServiceServices) {
             }
             get("/eventBooking/{id}") {
                 try {
-                    val eventId = call.parameters["id"]?.toLong() ?: return@get call.respond(HttpStatusCode.BadRequest)
+                    val eventId = call.parameters["id"]?.toLong() ?: return@get call.respond(HttpStatusCode.BadRequest, "Invalid ID")
                     val bookings = eventServiceServices.getBookingByEventId(eventId)
                     call.respond(HttpStatusCode.OK, bookings)
                 } catch (e: Exception) {
@@ -175,7 +175,7 @@ fun Application.eventServiceRoutes(eventServiceServices: EventServiceServices) {
             get("/serviceProviderBooking/{id}") {
                 try {
                     val serviceProviderId =
-                        call.parameters["id"]?.toLong() ?: return@get call.respond(HttpStatusCode.BadRequest)
+                        call.parameters["id"]?.toLong() ?: return@get call.respond(HttpStatusCode.BadRequest,"Invalid ID")
                     val bookings = eventServiceServices.getBookingByServiceProviderId(serviceProviderId)
                     call.respond(HttpStatusCode.OK, bookings)
                 } catch (e: Exception) {
