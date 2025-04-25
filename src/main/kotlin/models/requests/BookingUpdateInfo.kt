@@ -6,5 +6,6 @@ import kotlinx.serialization.Serializable
 @Serializable
 data class BookingUpdateInfo(
     val id:Long,
+    val organizerId:Long,
     val status: BookingStatus
 )

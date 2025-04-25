@@ -75,4 +75,18 @@ class EventRepository: EventRepositoryInterface {
         val serviceFees = ServicesTable.select(ServicesTable.fee).where(ServicesTable.id inList serviceIds).map { it[ServicesTable.fee ]}
         serviceFees.sum()
     }
+
+    override suspend fun getEvent(id: Long): Event? = transaction {
+        EventTable.selectAll().where{EventTable.id eq id}.map {
+            Event(
+                id = it[EventTable.id],
+                name = it[EventTable.name],
+                date = it[EventTable.date],
+                description = it[EventTable.description],
+                organizerId = it[EventTable.organizerId],
+                budget = it[EventTable.budget],
+                imageLink = it[EventTable.imageLink],
+            )
+        }.firstOrNull()
+    }
 }

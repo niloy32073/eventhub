@@ -91,6 +91,29 @@ class ServiceRepository:ServiceRepositoryInterface {
         services
     }
 
+    override suspend fun getService(serviceId: Long): Service? = transaction {
+        val avgRating = ServiceRatingTable
+            .selectAll()
+            .where { ServiceRatingTable.servicesId eq serviceId }
+            .map { it[ServiceRatingTable.rating].toDouble() }
+            .takeIf { it.isNotEmpty() }
+            ?.average()
+            ?.toFloat() ?: 0f
+
+        ServicesTable.selectAll().where { ServicesTable.id eq serviceId }.map {
+            Service(
+                id = serviceId,
+                title = it[ServicesTable.title],
+                description = it[ServicesTable.description],
+                rating = avgRating,
+                serviceProviderId = it[ServicesTable.serviceProviderId],
+                fee = it[ServicesTable.fee],
+                imageLink = it[ServicesTable.imageLink],
+                serviceType = it[ServicesTable.serviceType]
+            )
+        }.firstOrNull()
+    }
+
     override suspend fun getServiceById(serviceProviderId: Long): List<Service> = transaction {
         // First fetch all services
         val services = ServicesTable.selectAll().where{ServicesTable.serviceProviderId eq serviceProviderId}.map { row ->

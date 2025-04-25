@@ -12,6 +12,7 @@ interface ServiceRepositoryInterface {
     suspend fun rateService(serviceRatingInfo: ServiceRatingInfo)
     suspend fun getServiceRatingById(serviceId: Long): List<ServiceRatingInfo>
     suspend fun getServices(): List<Service>
+    suspend fun getService(serviceId: Long): Service?
     suspend fun getServiceById(serviceProviderId:Long):List<Service>
     suspend fun bookService(eventOrganizerId:Long,serviceId:Long)
     suspend fun updateBookingStatus(id:Long,status: BookingStatus):Boolean

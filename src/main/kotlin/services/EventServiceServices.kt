@@ -12,6 +12,7 @@ import com.dbytes.models.requests.ServiceBookingInfo
 import com.dbytes.models.requests.ServiceEventInfo
 import com.dbytes.models.requests.ServiceRatingInfo
 import com.dbytes.models.responses.BookingWithServiceDetails
+import java.time.LocalDateTime
 
 class EventServiceServices (private val eventRepository: EventRepositoryInterface, private val serviceRepository: ServiceRepositoryInterface, private val notificationRepository: NotificationRepositoryInterface) {
     suspend fun createEvent(event: Event){
@@ -50,6 +51,18 @@ class EventServiceServices (private val eventRepository: EventRepositoryInterfac
     }
 
     suspend fun deleteEvent(id:Long):Boolean{
+        val event = eventRepository.getEvent(id)
+        if(event != null) {
+            notificationRepository.create(
+                Notification(
+                    id = 0,
+                    receiverId = event.organizerId,
+                    body = "${event.name} is deleted",
+                    isRead = false,
+                    timestamp = System.currentTimeMillis(),
+                )
+            )
+        }
         return eventRepository.deleteEvent(id)
     }
 
@@ -62,20 +75,76 @@ class EventServiceServices (private val eventRepository: EventRepositoryInterfac
     }
 
     suspend fun addServiceToEvent(serviceEventInfo: ServiceEventInfo){
+        val event = eventRepository.getEvent(serviceEventInfo.eventId)
+        val service = serviceRepository.getService(serviceEventInfo.serviceId)
+        if(event != null && service!=null) {
+            notificationRepository.create(
+                Notification(
+                    id = 0,
+                    receiverId = event.organizerId,
+                    body = "${service.title} is Added to ${event.organizerId}",
+                    isRead = false,
+                    timestamp = System.currentTimeMillis(),
+                )
+            )
+        }
         eventRepository.addServicesToEvent(eventId = serviceEventInfo.eventId,serviceId = serviceEventInfo.serviceId)
     }
     suspend fun removeServiceFromEvent(serviceEventInfo: ServiceEventInfo){
+        val event = eventRepository.getEvent(serviceEventInfo.eventId)
+        val service = serviceRepository.getService(serviceEventInfo.serviceId)
+        if(event != null && service!=null) {
+            notificationRepository.create(
+                Notification(
+                    id = 0,
+                    receiverId = event.organizerId,
+                    body = "${service.title} is Removed from ${event.organizerId}",
+                    isRead = false,
+                    timestamp = System.currentTimeMillis(),
+                )
+            )
+        }
         eventRepository.removeServicesFromEvent(eventId = serviceEventInfo.eventId,serviceId = serviceEventInfo.serviceId)
     }
 
     suspend fun createService(service: Service){
+        notificationRepository.create(
+            Notification(
+                id = 0,
+                receiverId = service.serviceProviderId,
+                body = "${service.title} is Added",
+                isRead = false,
+                timestamp = System.currentTimeMillis(),
+            )
+        )
         serviceRepository.createService(service)
     }
 
     suspend fun updateService(service: Service):Boolean{
+        notificationRepository.create(
+            Notification(
+                id = 0,
+                receiverId = service.serviceProviderId,
+                body = "${service.title} is Updated",
+                isRead = false,
+                timestamp = System.currentTimeMillis(),
+            )
+        )
         return serviceRepository.updateService(service)
     }
     suspend fun deleteServiceById(serviceId:Long):Boolean{
+        val service = serviceRepository.getService(serviceId)
+        if(service != null) {
+            notificationRepository.create(
+                Notification(
+                    id = 0,
+                    receiverId = service.serviceProviderId,
+                    body = "${service.title} is Deleted",
+                    isRead = false,
+                    timestamp = System.currentTimeMillis(),
+                )
+            )
+        }
         return serviceRepository.deleteServiceById(serviceId)
     }
     suspend fun getServices(): List<Service>{
@@ -83,6 +152,28 @@ class EventServiceServices (private val eventRepository: EventRepositoryInterfac
     }
 
     suspend fun rateService(serviceRatingInfo: ServiceRatingInfo){
+        val service = serviceRepository.getService(serviceRatingInfo.serviceId)
+        if(service != null) {
+            notificationRepository.create(
+                Notification(
+                    id = 0,
+                    receiverId = service.serviceProviderId,
+                    body = "${service.title} is Rated by some one",
+                    isRead = false,
+                    timestamp = System.currentTimeMillis(),
+                )
+            )
+
+            notificationRepository.create(
+                Notification(
+                    id = 0,
+                    receiverId = serviceRatingInfo.userId,
+                    body = "You rate A services ${serviceRatingInfo.rating}* named ${service.title}",
+                    isRead = false,
+                    timestamp = System.currentTimeMillis(),
+                )
+            )
+        }
         serviceRepository.rateService(serviceRatingInfo)
     }
 
@@ -93,9 +184,40 @@ class EventServiceServices (private val eventRepository: EventRepositoryInterfac
         return serviceRepository.getServiceById(serviceProviderId)
     }
     suspend fun bookService(serviceBookingInfo: ServiceBookingInfo){
+        val service = serviceRepository.getService(serviceBookingInfo.serviceId)
+        if(service != null) {
+            notificationRepository.create(
+                Notification(
+                    id = 0,
+                    receiverId = service.serviceProviderId,
+                    body = "A new booking Request",
+                    isRead = false,
+                    timestamp = System.currentTimeMillis(),
+                )
+            )
+
+            notificationRepository.create(
+                Notification(
+                    id = 0,
+                    receiverId = serviceBookingInfo.eventOrganizerId,
+                    body = "Your booking request is sent to the service provider. Service name ${service.title}",
+                    isRead = false,
+                    timestamp = System.currentTimeMillis(),
+                )
+            )
+        }
         serviceRepository.bookService(eventOrganizerId = serviceBookingInfo.eventOrganizerId, serviceId = serviceBookingInfo.serviceId)
     }
     suspend fun updateBookingStatus(bookingUpdateInfo: BookingUpdateInfo):Boolean{
+        notificationRepository.create(
+            Notification(
+                id = 0,
+                receiverId = bookingUpdateInfo.organizerId,
+                body = "Your booking request is ${bookingUpdateInfo.status} by service provider.",
+                isRead = false,
+                timestamp = System.currentTimeMillis(),
+            )
+        )
         return serviceRepository.updateBookingStatus(
             id = bookingUpdateInfo.id,
             status = bookingUpdateInfo.status
