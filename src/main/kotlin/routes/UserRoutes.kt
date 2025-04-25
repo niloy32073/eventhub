@@ -1,8 +1,7 @@
 package com.dbytes.routes
 
-import com.dbytes.models.requests.ChangeNameInfo
+import com.dbytes.models.requests.ChangeUserInfo
 import com.dbytes.models.requests.ChangePasswordInfo
-import com.dbytes.models.requests.ChangePhoneInfo
 import com.dbytes.services.UserServices
 import io.ktor.http.*
 import io.ktor.server.application.*
@@ -55,20 +54,12 @@ fun Application.userRoutes(userServices: UserServices) {
                     call.respond(HttpStatusCode.BadRequest, "Failed due to ${e.message}")
                 }
             }
-            post("/changeName") {
+            post("/changeUserInfo") {
                 try {
-                    val changeName = call.receive<ChangeNameInfo>()
-                    userServices.updateUserNameById(changeName.id, changeName.name)
+                    val changeUserInfo = call.receive<ChangeUserInfo>()
+                    userServices.updateUserNameById(changeUserInfo.id, changeUserInfo.name)
                     call.respond(HttpStatusCode.OK, "User Updated Successfully")
-                } catch (e: Exception) {
-                    call.respond(HttpStatusCode.BadRequest, "Failed due to ${e.message}")
-                }
-            }
-            post("/changePhone") {
-                try {
-                    val changePhoneInfo = call.receive<ChangePhoneInfo>()
-                    userServices.updateUserPhoneById(changePhoneInfo.id, changePhoneInfo.phone)
-                    call.respond(HttpStatusCode.OK, "User Updated Successfully")
+                    userServices.updateUserPhoneById(changeUserInfo.id, changeUserInfo.phone)
                 } catch (e: Exception) {
                     call.respond(HttpStatusCode.BadRequest, "Failed due to ${e.message}")
                 }

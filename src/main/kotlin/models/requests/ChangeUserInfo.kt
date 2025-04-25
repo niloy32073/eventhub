@@ -3,7 +3,8 @@ package com.dbytes.models.requests
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class ChangePhoneInfo(
+data class ChangeUserInfo(
     val id: Long,
-    val phone: String,
+    val name: String,
+    val phone: String
 )
