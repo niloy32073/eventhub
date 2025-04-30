@@ -145,6 +145,16 @@ fun Application.eventServiceRoutes(eventServiceServices: EventServiceServices) {
                     call.respond(HttpStatusCode.BadRequest, "Service Get Failed. Reason: ${e.message}")
                 }
             }
+            get("/servicesByEventId/{id}") {
+                try {
+                    val serviceProviderId =
+                        call.parameters["id"]?.toLong() ?: return@get call.respond(HttpStatusCode.BadRequest,"Invalid ID")
+                    val services = eventServiceServices.getServicesByEventId(serviceProviderId)
+                    call.respond(HttpStatusCode.OK, services)
+                } catch (e: Exception) {
+                    call.respond(HttpStatusCode.BadRequest, "Service Get Failed. Reason: ${e.message}")
+                }
+            }
             post("/bookService") {
                 try {
                     val serviceBookingInfo = call.receive<ServiceBookingInfo>()

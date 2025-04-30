@@ -14,6 +14,7 @@ interface ServiceRepositoryInterface {
     suspend fun getServices(): List<Service>
     suspend fun getService(serviceId: Long): Service?
     suspend fun getServiceById(serviceProviderId:Long):List<Service>
+    suspend fun getServiceByEventId(eventId: Long): List<Service>
     suspend fun bookService(eventOrganizerId:Long,serviceId:Long)
     suspend fun updateBookingStatus(id:Long,status: BookingStatus):Boolean
     suspend fun getBookingByEventId(eventId:Long):List<BookingWithServiceDetails>

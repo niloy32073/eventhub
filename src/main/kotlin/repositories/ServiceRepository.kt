@@ -143,6 +143,32 @@ class ServiceRepository:ServiceRepositoryInterface {
         services
     }
 
+    override suspend fun getServiceByEventId(eventId: Long): List<Service>  = transaction{
+        val serviceIds = EventServicesTable.selectAll().where { EventServicesTable.eventId eq eventId }.map { it[EventServicesTable.servicesId]
+        }
+        ServicesTable.selectAll().where { ServicesTable.id inList serviceIds }.map {
+            val serviceId = it[ServicesTable.id]
+            val avgRating = ServiceRatingTable
+                .selectAll()
+                .where{ ServiceRatingTable.servicesId eq serviceId }
+                .map { it[ServiceRatingTable.rating].toDouble() }
+                .takeIf { it.isNotEmpty() }
+                ?.average()
+                ?.toFloat() ?: 0f
+
+            Service(
+                id = serviceId,
+                title = it[ServicesTable.title],
+                description = it[ServicesTable.description],
+                rating = avgRating,
+                serviceProviderId = it[ServicesTable.serviceProviderId],
+                fee = it[ServicesTable.fee],
+                imageLink = it[ServicesTable.imageLink],
+                serviceType = it[ServicesTable.serviceType]
+            )
+        }
+    }
+
     override suspend fun bookService(eventOrganizerId: Long, serviceId: Long){
         transaction {
             ServiceBookingTable.insert {

@@ -151,6 +151,10 @@ class EventServiceServices (private val eventRepository: EventRepositoryInterfac
         return serviceRepository.getServices()
     }
 
+    suspend fun getServicesByEventId(eventId:Long):List<Service>{
+        return serviceRepository.getServiceByEventId(eventId)
+    }
+
     suspend fun rateService(serviceRatingInfo: ServiceRatingInfo){
         val service = serviceRepository.getService(serviceRatingInfo.serviceId)
         if(service != null) {
