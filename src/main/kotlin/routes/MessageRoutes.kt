@@ -41,6 +41,7 @@ fun Application.messageRoutes(messageServices: MessageServices) {
                     val messages = messageServices.getMessagesById(senderId = messageRequestInfo.senderId, receiverId = messageRequestInfo.receiverId)
                     call.respond(HttpStatusCode.OK,messages)
                 } catch (e: Exception){
+                    println("Here is the error: ${e.message}")
                     println(e)
                     call.respond(HttpStatusCode.BadRequest, "Fetching Failed. Reason: ${e.message}")
                 }
