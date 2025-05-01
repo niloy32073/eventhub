@@ -30,10 +30,12 @@ class MessageRepository: MessageRepositoryInterface {
         val receiverIds = MessageTable.select(MessageTable.receiverId).where{ MessageTable.senderId eq userId }.map{it[MessageTable.receiverId]}
         val connectedUserIds =(senderIds + receiverIds).filter { it != userId }.toSet()
         println(connectedUserIds)
-        UserTable.selectAll().where{ UserTable.id inList connectedUserIds.toList() }.map {
+        val users = UserTable.selectAll().where{ UserTable.id inList connectedUserIds.toList() }.map {
             println(it[UserTable.id])
             UserBasicInfo(userId = it[UserTable.id], name = it[UserTable.name])
         }
+        println(users)
+        users
     }
 
     override suspend fun getMessagesById(
