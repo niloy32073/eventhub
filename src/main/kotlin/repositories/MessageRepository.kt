@@ -31,7 +31,7 @@ class MessageRepository: MessageRepositoryInterface {
         val connectedUserIds =(senderIds + receiverIds).filter { it != userId }.toSet()
         println(connectedUserIds)
         UserTable.selectAll().where{ UserTable.id inList connectedUserIds.toList() }.map {
-            println(it)
+            println(it[UserTable.id])
             UserBasicInfo(userId = it[UserTable.id], name = it[UserTable.name])
         }
     }
