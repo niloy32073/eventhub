@@ -35,7 +35,7 @@ fun Application.messageRoutes(messageServices: MessageServices) {
                 }
             }
 
-            get("/messages"){
+            post("/messages"){
                 try {
                     val messageRequestInfo = call.receive<MessageRequestInfo>()
                     val messages = messageServices.getMessagesById(senderId = messageRequestInfo.senderId, receiverId = messageRequestInfo.receiverId)
