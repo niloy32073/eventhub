@@ -38,7 +38,7 @@ class MessageRepository: MessageRepositoryInterface {
         senderId: Long,
         receiverId: Long
     ): List<Message> = transaction {
-        MessageTable.selectAll().where((MessageTable.senderId eq senderId) and (MessageTable.receiverId eq receiverId)).map{
+        val messageList1 = MessageTable.selectAll().where((MessageTable.senderId eq senderId) and (MessageTable.receiverId eq receiverId)).map{
             Message(
                 id = it[MessageTable.id],
                 senderId = it[MessageTable.senderId],
@@ -48,5 +48,19 @@ class MessageRepository: MessageRepositoryInterface {
                 sentAt = it[MessageTable.sentAt],
             )
         }
+        val messageList2 = MessageTable.selectAll().where((MessageTable.senderId eq receiverId) and (MessageTable.receiverId eq senderId)).map{
+            Message(
+                id = it[MessageTable.id],
+                senderId = it[MessageTable.senderId],
+                receiverId = it[MessageTable.receiverId],
+                text = it[MessageTable.text],
+                imageLink = it[MessageTable.ImageLink],
+                sentAt = it[MessageTable.sentAt],
+            )
+        }
+
+        val sortedMessages = (messageList1 + messageList2).sortedBy { it.sentAt }
+        sortedMessages
+
     }
 }
