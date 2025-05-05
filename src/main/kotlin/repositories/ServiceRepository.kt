@@ -221,12 +221,22 @@ class ServiceRepository:ServiceRepositoryInterface {
         val providerAlias = UserTable.alias("provider")
         val organizerAlias = UserTable.alias("organizer")
 
+        val latestEventSubquery = EventTable
+            .select(EventTable.id)
+            .where { EventTable.organizerId eq ServiceBookingTable.eventOrganizerId }
+            .orderBy(EventTable.date to SortOrder.DESC)
+            .alias("latest_event")
+
         ServiceBookingTable
             .join(ServicesTable, JoinType.INNER, ServiceBookingTable.serviceId, ServicesTable.id)
             .join(providerAlias, JoinType.INNER, ServicesTable.serviceProviderId, providerAlias[UserTable.id])
             .join(organizerAlias, JoinType.INNER, ServiceBookingTable.eventOrganizerId, organizerAlias[UserTable.id])
-            .join(EventTable, JoinType.INNER, ServiceBookingTable.eventOrganizerId, EventTable.organizerId)
-            .selectAll().where { ServicesTable.serviceProviderId eq serviceProviderId }
+            .join(EventTable, JoinType.INNER) {
+                (ServiceBookingTable.eventOrganizerId eq EventTable.organizerId) and
+                        (EventTable.id eq latestEventSubquery[EventTable.id])
+            }
+            .selectAll()
+            .where { ServicesTable.serviceProviderId eq serviceProviderId }
             .map { row ->
                 BookingWithServiceDetails(
                     id = row[ServicesTable.id],
