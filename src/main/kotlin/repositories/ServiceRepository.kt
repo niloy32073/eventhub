@@ -220,16 +220,19 @@ class ServiceRepository:ServiceRepositoryInterface {
     override suspend fun getBookingByServiceProviderId(serviceProviderId: Long): List<BookingWithServiceDetails> = transaction {
         val providerAlias = UserTable.alias("provider")
         val organizerAlias = UserTable.alias("organizer")
+        val eventServicesAlias = EventServicesTable.alias("eventServices")
 
         ServiceBookingTable
             .join(ServicesTable, JoinType.INNER, ServiceBookingTable.serviceId, ServicesTable.id)
             .join(providerAlias, JoinType.INNER, ServicesTable.serviceProviderId, providerAlias[UserTable.id])
             .join(organizerAlias, JoinType.INNER, ServiceBookingTable.eventOrganizerId, organizerAlias[UserTable.id])
-            .join(EventTable, JoinType.INNER, ServiceBookingTable.eventOrganizerId, EventTable.organizerId)
-            .selectAll().where { ServicesTable.serviceProviderId eq serviceProviderId }
+            .join(eventServicesAlias, JoinType.INNER, ServiceBookingTable.serviceId, eventServicesAlias[EventServicesTable.servicesId])
+            .join(EventTable, JoinType.INNER, eventServicesAlias[EventServicesTable.eventId], EventTable.id)
+            .selectAll()
+            .where { ServicesTable.serviceProviderId eq serviceProviderId }
             .map { row ->
                 BookingWithServiceDetails(
-                    id = row[ServicesTable.id],
+                    id = row[ServiceBookingTable.id], // Use booking ID, not service ID
                     title = row[ServicesTable.title],
                     description = row[ServicesTable.description],
                     serviceProviderName = row[providerAlias[UserTable.name]],
@@ -243,5 +246,6 @@ class ServiceRepository:ServiceRepositoryInterface {
                     bookingStatus = row[ServiceBookingTable.status]
                 )
             }
+            .distinct() // Ensure no duplicate bookings
     }
 }
