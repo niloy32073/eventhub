@@ -187,6 +187,7 @@ fun Application.eventServiceRoutes(eventServiceServices: EventServiceServices) {
                     val serviceProviderId =
                         call.parameters["id"]?.toLong() ?: return@get call.respond(HttpStatusCode.BadRequest,"Invalid ID")
                     val bookings = eventServiceServices.getBookingByServiceProviderId(serviceProviderId)
+                    print(bookings)
                     call.respond(HttpStatusCode.OK, bookings)
                 } catch (e: Exception) {
                     call.respond(HttpStatusCode.BadRequest, "Booking Fetch Failed. Reason: ${e.message}")
