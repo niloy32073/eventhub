@@ -2,18 +2,21 @@ package com.dbytes
 
 import com.dbytes.repositories.AuthRepository
 import com.dbytes.repositories.EventRepository
+import com.dbytes.repositories.ImageGenerateRepository
 import com.dbytes.repositories.MessageRepository
 import com.dbytes.repositories.NotificationRepository
 import com.dbytes.repositories.ServiceRepository
 import com.dbytes.repositories.UserRepository
 import com.dbytes.routes.authRoutes
 import com.dbytes.routes.eventServiceRoutes
+import com.dbytes.routes.imageGenerateMessageRoutes
 import com.dbytes.routes.imageUploadRoutes
 import com.dbytes.routes.messageRoutes
 import com.dbytes.routes.notificationRoutes
 import com.dbytes.routes.userRoutes
 import com.dbytes.services.AuthServices
 import com.dbytes.services.EventServiceServices
+import com.dbytes.services.ImageGenerateServices
 import com.dbytes.services.MessageServices
 import com.dbytes.services.NotificationServices
 import com.dbytes.services.UserServices
@@ -57,12 +60,14 @@ fun Application.module() {
     val serviceRepository: ServiceRepository = ServiceRepository()
     val notificationRepository: NotificationRepository = NotificationRepository()
     val messageRepository: MessageRepository = MessageRepository()
+    val imageGenerateRepository: ImageGenerateRepository = ImageGenerateRepository()
 
     val authServices = AuthServices(authRepository)
     val userServices = UserServices(userRepository)
     val eventServiceServices = EventServiceServices(eventRepository,serviceRepository,notificationRepository)
     val notificationServices = NotificationServices(notificationRepository)
     val messageServices = MessageServices(messageRepository)
+    val imageGenerateServices = ImageGenerateServices(imageGenerateRepository)
 
     authRoutes(authServices)
     userRoutes(userServices)
@@ -70,5 +75,6 @@ fun Application.module() {
     notificationRoutes(notificationServices)
     messageRoutes(messageServices)
     imageUploadRoutes()
+    imageGenerateMessageRoutes(imageGenerateServices)
 
 }
