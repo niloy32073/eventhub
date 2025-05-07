@@ -24,7 +24,8 @@ fun Application.imageGenerateMessageRoutes(imageGenerateServices: ImageGenerateS
                     imageLink = imageLink
                 ))
             } catch(e: Exception) {
-                call.respond(HttpStatusCode.InternalServerError, "An error occurred")
+                println(e)
+                call.respond(HttpStatusCode.InternalServerError, "${e.message}")
             }
         }
         get("/generateImageMessages/{id}") {
@@ -33,7 +34,8 @@ fun Application.imageGenerateMessageRoutes(imageGenerateServices: ImageGenerateS
                 val imageGenerateMessages = imageGenerateServices.getImageGenerateMessageById(id)
                 call.respond(HttpStatusCode.OK,imageGenerateMessages)
             } catch(e: Exception) {
-                call.respond(HttpStatusCode.InternalServerError, "An error occurred")
+                println(e)
+                call.respond(HttpStatusCode.InternalServerError, "${e.message}")
             }
         }
     }
