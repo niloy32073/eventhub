@@ -99,6 +99,20 @@ fun Application.eventServiceRoutes(eventServiceServices: EventServiceServices) {
                     call.respond(HttpStatusCode.BadRequest, "Service Update Failed. Reason: ${e.message}")
                 }
             }
+            get("/service/{id}") {
+                try {
+                    val id = call.parameters["id"]?.toLong() ?: return@get call.respond(HttpStatusCode.BadRequest,"Invalid ID")
+                    val service = eventServiceServices.getServiceByServiceId(id)
+                    if (service != null) {
+                        call.respond(HttpStatusCode.OK,service)
+                    }
+                    else{
+                        call.respond(HttpStatusCode.NotFound, "Service Not Found")
+                    }
+                } catch (e: Exception) {
+                    call.respond(HttpStatusCode.BadRequest, "Service Deleted Failed. Reason: ${e.message}")
+                }
+            }
             delete("/service/{id}") {
                 try {
                     val id = call.parameters["id"]?.toLong() ?: return@delete call.respond(HttpStatusCode.BadRequest,"Invalid ID")

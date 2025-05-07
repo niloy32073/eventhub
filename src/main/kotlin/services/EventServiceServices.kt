@@ -90,6 +90,10 @@ class EventServiceServices (private val eventRepository: EventRepositoryInterfac
         }
         eventRepository.addServicesToEvent(eventId = serviceEventInfo.eventId,serviceId = serviceEventInfo.serviceId)
     }
+
+    suspend fun getServiceByServiceId(id:Long):Service?{
+        return serviceRepository.getService(id)
+    }
     suspend fun removeServiceFromEvent(serviceEventInfo: ServiceEventInfo){
         val event = eventRepository.getEvent(serviceEventInfo.eventId)
         val service = serviceRepository.getService(serviceEventInfo.serviceId)
