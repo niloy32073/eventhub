@@ -22,6 +22,7 @@ object DBConfig {
             SchemaUtils.create(EventServicesTable)
             SchemaUtils.create(MessageTable)
             SchemaUtils.create(NotificationsTable)
+            SchemaUtils.create(ImageGenerateMessageTable)
         }
     }
 }
