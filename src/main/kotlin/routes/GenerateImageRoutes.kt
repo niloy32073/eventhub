@@ -15,8 +15,14 @@ fun Application.imageGenerateMessageRoutes(imageGenerateServices: ImageGenerateS
         post("/generateImage") {
             try{
                 val imageGenerateMessage = call.receive<ImageGenerateMessage>()
-                imageGenerateServices.create(imageGenerateMessage)
-                call.respond(HttpStatusCode.OK,"Image Generate successfully")
+                val imageLink = imageGenerateServices.create(imageGenerateMessage)
+
+                call.respond(HttpStatusCode.OK, ImageGenerateMessage(
+                    id = 0,
+                    senderId = imageGenerateMessage.senderId,
+                    text = imageGenerateMessage.text,
+                    imageLink = imageLink
+                ))
             } catch(e: Exception) {
                 call.respond(HttpStatusCode.InternalServerError, "An error occurred")
             }

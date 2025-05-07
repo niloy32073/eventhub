@@ -9,7 +9,7 @@ import org.jetbrains.exposed.sql.transactions.transaction
 import java.io.File
 
 class ImageGenerateRepository: ImageGenerateRepositoryInterface {
-    override suspend fun create(imageGenerateMessage: ImageGenerateMessage) {
+    override suspend fun create(imageGenerateMessage: ImageGenerateMessage):String {
         val uploadsDir = File("uploads")
 
         // Filter only image files
@@ -28,6 +28,12 @@ class ImageGenerateRepository: ImageGenerateRepositoryInterface {
                 it[text] = imageGenerateMessage.text
                 it[imageLink] = randomImageLink
             }
+        }
+        if(randomImageLink != null) {
+            return randomImageLink
+        }
+        else{
+            return "https://www.iconpacks.net/icons/4/free-no-image-icon-14596-thumb.png"
         }
     }
 
