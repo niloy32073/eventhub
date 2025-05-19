@@ -200,6 +200,7 @@ class ServiceRepository:ServiceRepositoryInterface {
             .map {
                 BookingWithServiceDetails(
                     id = it[ServicesTable.id],
+                    eventServiceId = it[EventServicesTable.id],
                     title = it[ServicesTable.title],
                     description = it[ServicesTable.description],
                     serviceProviderName = it[providerAlias[UserTable.name]],
@@ -233,6 +234,7 @@ class ServiceRepository:ServiceRepositoryInterface {
             .map { row ->
                 BookingWithServiceDetails(
                     id = row[ServiceBookingTable.id], // Use booking ID, not service ID
+                    eventServiceId = row[EventServicesTable.id],
                     title = row[ServicesTable.title],
                     description = row[ServicesTable.description],
                     serviceProviderName = row[providerAlias[UserTable.name]],
