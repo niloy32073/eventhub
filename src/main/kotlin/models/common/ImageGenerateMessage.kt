@@ -7,5 +7,5 @@ data class ImageGenerateMessage(
     val id: Long,
     val senderId: Long,
     val text: String,
-    val imageLink: String?
+    val imageLink: String? = null
 )

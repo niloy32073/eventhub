@@ -50,10 +50,8 @@ class EventRepository: EventRepositoryInterface {
         }
     }
 
-    override suspend fun removeServicesFromEvent(eventId: Long, serviceId: Long): Boolean  = transaction{
-        EventServicesTable.deleteWhere {
-            (EventServicesTable.eventId eq eventId) and (EventServicesTable.servicesId eq serviceId)
-        } > 0
+    override suspend fun removeServicesFromEvent(eventServiceId: Long): Boolean  = transaction{
+        EventServicesTable.deleteWhere { EventServicesTable.id eq eventServiceId } > 0
     }
 
     override suspend fun getEventsByUserId(id: Long): List<Event> = transaction {

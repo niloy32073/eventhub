@@ -8,7 +8,7 @@ data class Event(
     val name: String,
     val description: String,
     val organizerId:Long,
-    val imageLink: String?,
+    val imageLink: String? = null,
     val date:Long,
     val budget:Float
 )
