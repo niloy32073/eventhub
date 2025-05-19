@@ -108,7 +108,7 @@ class EventServiceServices (private val eventRepository: EventRepositoryInterfac
                 )
             )
         }
-        eventRepository.removeServicesFromEvent(eventId = serviceEventInfo.eventId,serviceId = serviceEventInfo.serviceId)
+        eventRepository.removeServicesFromEvent(eventServiceId = serviceEventInfo.id)
     }
 
     suspend fun createService(service: Service){
