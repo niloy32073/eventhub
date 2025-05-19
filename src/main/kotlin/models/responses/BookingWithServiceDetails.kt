@@ -7,7 +7,6 @@ import kotlinx.serialization.Serializable
 @Serializable
 data class BookingWithServiceDetails(
     val id: Long,
-    val eventServiceId:Long,
     val title: String,
     val description: String,
     val serviceProviderName: String?,

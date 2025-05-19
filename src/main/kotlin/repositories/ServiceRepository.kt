@@ -7,6 +7,7 @@ import com.dbytes.interfaces.ServiceRepositoryInterface
 import com.dbytes.models.common.Service
 import com.dbytes.models.requests.ServiceRatingInfo
 import com.dbytes.models.responses.BookingWithServiceDetails
+import com.dbytes.models.responses.ServiceEvent
 import org.jetbrains.exposed.sql.*
 import org.jetbrains.exposed.sql.SqlExpressionBuilder.eq
 import org.jetbrains.exposed.sql.transactions.transaction
@@ -143,28 +144,35 @@ class ServiceRepository:ServiceRepositoryInterface {
         services
     }
 
-    override suspend fun getServiceByEventId(eventId: Long): List<Service>  = transaction{
-        val serviceIds = EventServicesTable.selectAll().where { EventServicesTable.eventId eq eventId }.map { it[EventServicesTable.servicesId]
-        }
-        ServicesTable.selectAll().where { ServicesTable.id inList serviceIds }.map {
-            val serviceId = it[ServicesTable.id]
+    override suspend fun getServiceByEventId(eventId: Long): List<ServiceEvent>  = transaction{
+        val serviceIdsWithEventIds = EventServicesTable
+            .selectAll()
+            .where { EventServicesTable.eventId eq eventId }
+            .map { it[EventServicesTable.servicesId] to it[EventServicesTable.id] } // Pair of servicesId and serviceEventId
+
+        ServicesTable.selectAll().where { ServicesTable.id inList serviceIdsWithEventIds.map { it.first } }.map { serviceRow ->
+            val serviceId = serviceRow[ServicesTable.id]
+            // Find the corresponding serviceEventId (guaranteed to exist since serviceId is in the list)
+            val serviceEventId = serviceIdsWithEventIds.first { it.first == serviceId }.second
+
             val avgRating = ServiceRatingTable
                 .selectAll()
-                .where{ ServiceRatingTable.servicesId eq serviceId }
+                .where { ServiceRatingTable.servicesId eq serviceId }
                 .map { it[ServiceRatingTable.rating].toDouble() }
                 .takeIf { it.isNotEmpty() }
                 ?.average()
                 ?.toFloat() ?: 0f
 
-            Service(
+            ServiceEvent(
                 id = serviceId,
-                title = it[ServicesTable.title],
-                description = it[ServicesTable.description],
+                serviceEventId = serviceEventId, // Non-null Long
+                title = serviceRow[ServicesTable.title],
+                description = serviceRow[ServicesTable.description],
                 rating = avgRating,
-                serviceProviderId = it[ServicesTable.serviceProviderId],
-                fee = it[ServicesTable.fee],
-                imageLink = it[ServicesTable.imageLink],
-                serviceType = it[ServicesTable.serviceType]
+                serviceProviderId = serviceRow[ServicesTable.serviceProviderId],
+                fee = serviceRow[ServicesTable.fee],
+                imageLink = serviceRow[ServicesTable.imageLink],
+                serviceType = serviceRow[ServicesTable.serviceType]
             )
         }
     }
@@ -200,7 +208,6 @@ class ServiceRepository:ServiceRepositoryInterface {
             .map {
                 BookingWithServiceDetails(
                     id = it[ServicesTable.id],
-                    eventServiceId = it[EventServicesTable.id],
                     title = it[ServicesTable.title],
                     description = it[ServicesTable.description],
                     serviceProviderName = it[providerAlias[UserTable.name]],
@@ -234,7 +241,6 @@ class ServiceRepository:ServiceRepositoryInterface {
             .map { row ->
                 BookingWithServiceDetails(
                     id = row[ServiceBookingTable.id], // Use booking ID, not service ID
-                    eventServiceId = row[EventServicesTable.id],
                     title = row[ServicesTable.title],
                     description = row[ServicesTable.description],
                     serviceProviderName = row[providerAlias[UserTable.name]],
